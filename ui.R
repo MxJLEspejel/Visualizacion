@@ -3,17 +3,13 @@ library(shinydashboard)
 library(quantmod)
 library(ggplot2)
 
-getSymbols("AAPL", from = "2010-01-01", to ="2017-12-31", auto.assign = TRUE)
-getSymbols("GOOGL", from = "2010-01-01", to ="2017-12-31", auto.assign = TRUE)
-getSymbols("MSFT", from = "2010-01-01", to ="2017-12-31", auto.assign = TRUE)
-
 shinyUI(
   dashboardPage(
     dashboardHeader(title = "Stock Evaluation"),
     dashboardSidebar(
       selectInput("select_stock", label = "Select Stock", 
-                  choices = list("APPL" = "APPL", "GOOGL" = "GOOGL", "MSFT" = "MSFT"), 
-                  selected = "APPL"),
+                  choices = list("AAPL" = "AAPL", "GOOGL" = "GOOGL", "MSFT" = "MSFT"), 
+                  selected = "AAPL"),
       dateRangeInput("date_range", label = "Date range", min = '2010-01-01', max = '2017-12-30',
                      start = '2017-01-01', end = '2017-12-30'),
       actionButton("action_select_stock", label = "Select")
