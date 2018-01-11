@@ -8,8 +8,10 @@ shinyUI(
     dashboardHeader(title = "Stock Evaluation"),
     dashboardSidebar(
       selectInput("select_stock", label = "Select Stock", 
-                  choices = list("AAPL" = "AAPL", "GOOGL" = "GOOGL", "MSFT" = "MSFT"), 
-                  selected = "AAPL"),
+                  choices = list("AAPL.Open" = "AAPL.Open",
+                                 "GOOGL.Open" = "GOOGL.Open", 
+                                 "MSFT.Open" = "MSFT.Open"), 
+                  selected = "AAPL.Open"),
       dateRangeInput("date_range", label = "Date range", min = '2010-01-01', max = '2017-12-30',
                      start = '2017-01-01', end = '2017-12-30'),
       actionButton("action_select_stock", label = "Select")
