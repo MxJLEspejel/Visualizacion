@@ -1,5 +1,6 @@
 library(shiny)
 library(shinydashboard)
+library(shinythemes)
 library(quantmod)
 library(ggplot2)
 
@@ -14,35 +15,35 @@ shinyUI(
                   selected = "AAPL.Open"),
       dateRangeInput("date_range", label = "Date range", min = '2010-01-01', max = '2017-12-30',
                      start = '2017-01-01', end = '2017-12-30'),
-      actionButton("action_select_stock", label = "Select")
+      actionButton("action_select_stock", label = "Select"),
+      textInput("download_name", label = "Stock Name"),
+      actionButton("action_download_stock", label = "Download"),
+      p( class = "text-muted",
+        paste("Help: by default the selected stock is save as stock to use with  ",
+              "R code."
+        )
+      )
     ),
     dashboardBody(
       fluidRow(
-        box(title = "Stock Time Serie", status = "primary", solidHeader = T, width = NULL ,
+        box(title = "Stock Time Serie", status = "primary",
+            solidHeader = T, width = 9 ,
             textOutput("title_stock"),
             plotOutput("plot_stock")
+        ),
+        box(title = "Results", status = "danger",  width = 3,
+            textOutput("output_backtest")
+        ),
+        box(title = "Back test", status = "danger", width = 3,
+            dateRangeInput("backtest_date_range", label = "Date range", 
+                           min = '2010-01-01', max = '2017-12-30', start='2017-01-01',
+                           end = '2017-12-30'),
+            actionButton("action_backtest", label = "Evaluate")
         )
       ),
       fluidRow(
-        tabsetPanel(
-          tabPanel(title ="R Algorithm",
-                   box(title = "Area for R code", status = "warning", solidHeader = T, 
-                     textAreaInput("algorithm_code", label = "R code ")
-                   ),
-                   box(title = "Back test", status = "warning", solidHeader = T, width = 3,
-                       dateRangeInput("backtest_date_range", label = "Date range", 
-                                      min = '2010-01-01', max = '2017-12-30', start='2017-01-01',
-                                      end = '2017-12-30'),
-                       actionButton("action_backtest", label = "Evaluate")
-                   ),
-                   box(title = "Results", status = "success", solidHeader = T, width = 3,
-                       textOutput("output_backtest")
-                   )
-          ),
-          tabPanel(title = "Download Stock",
-                   textInput("download_name", label = "Stock Name"),
-                   actionButton("action_download_stock", label = "Download")
-          )
+        box(title = "Area for R code", status = "danger", solidHeader = T, width = 9, 
+            textAreaInput("algorithm_code", label = "R code ")
         )
       )
     )

@@ -22,10 +22,16 @@ shinyServer(function(input, output, clientData, session) {
       paste0(as.Date(input$date_range[1]),'/',as.Date(input$date_range[2])),
       ])
     df$index <- as.Date(rownames(df))
-    stocks$grafica <- ggplot(df, 
-                             aes_string(x="index", 
-                                        y=input$select_stock)
-                             ) + geom_line()
+    stocks$grafica <- ggplot(
+      df, 
+      aes_string(x="index", 
+                 y=input$select_stock)
+    ) + geom_line()
+    
+    updateDateRangeInput(
+      session, "backtest_date_range", start = input$date_range[1], 
+      end = input$date_range[2],min = input$date_range[1], max = input$date_range[2]
+    )
   })
   
   observeEvent(input$action_download_stock,ignoreNULL=F, {
@@ -35,7 +41,22 @@ shinyServer(function(input, output, clientData, session) {
   }) 
   
   observeEvent(input$action_backtest,{
-    stocks$text <- simple_source(input$algorithm_code)
+    actualEnvir <- new.env()
+    actualEnvir$stock <- as.data.frame(
+      stocks$df[paste0(
+        as.Date(input$backtest_date_range[1]),
+        '/',
+        as.Date(input$backtest_date_range[2])),])
+    actualEnvir$investment <- 1000000
+    stocks$text <- simple_source(input$algorithm_code,envir = actualEnvir)
+    stocks$grafica <- stocks$grafica +
+      geom_rect(aes(
+        xmin = as.Date(input$backtest_date_range[1]),
+        xmax = as.Date(input$backtest_date_range[2]),
+        ymin = min(actualEnvir$stock), 
+        ymax = max(actualEnvir$stock)
+      ),
+      fill="royalBlue", alpha=0.003, inherit.aes=FALSE) + guides(fill="none")
   })
   
   output$title_stock <- renderText(stocks$title)
