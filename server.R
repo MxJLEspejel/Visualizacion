@@ -10,7 +10,8 @@ shinyServer(function(input, output, clientData, session) {
     nombres = list("AAPL.Open" = "AAPL.Open",
                    "GOOGL.Open" = "GOOGL.Open", 
                    "MSFT.Open" = "MSFT.Open"),
-    grafica = NULL
+    grafica = NULL,
+    text=NULL
   )
   
   observeEvent(input$action_select_stock,ignoreNULL=F,{
@@ -33,7 +34,12 @@ shinyServer(function(input, output, clientData, session) {
     updateSelectInput(session, "select_stock", choices = stocks$nombres)
   }) 
   
+  observeEvent(input$action_backtest,{
+    stocks$text <- simple_source(input$algorithm_code)
+  })
+  
   output$title_stock <- renderText(stocks$title)
   output$dates_Stock <- renderText(stocks$dates)
   output$plot_stock <- renderPlot(stocks$grafica)
+  output$output_backtest <- renderText(stocks$text)
 })

@@ -24,21 +24,24 @@ shinyUI(
         )
       ),
       fluidRow(
-        tabBox(
-          tabsetPanel(
-            tabPanel(title ="R Algorithm",
-                     textAreaInput("algorithm_code",label = "Area for R code ")
-            ),
-            tabPanel(title = "Backtest", 
-                     dateRangeInput("backtest_date_range", label = "Date range", 
-                                    min = '2010-01-01', max = '2017-12-30', start='2017-01-01',
-                                    end = '2017-12-30'),
-                     actionButton("action_backtest", label = "Evaluate")
-            ),
-            tabPanel(title = "Download Stock",
-                     textInput("download_name", label = "Stock Name"),
-                     actionButton("action_download_stock", label = "Download")
-            )
+        tabsetPanel(
+          tabPanel(title ="R Algorithm",
+                   box(title = "Area for R code", status = "warning", solidHeader = T, 
+                     textAreaInput("algorithm_code", label = "R code ")
+                   ),
+                   box(title = "Back test", status = "warning", solidHeader = T, width = 3,
+                       dateRangeInput("backtest_date_range", label = "Date range", 
+                                      min = '2010-01-01', max = '2017-12-30', start='2017-01-01',
+                                      end = '2017-12-30'),
+                       actionButton("action_backtest", label = "Evaluate")
+                   ),
+                   box(title = "Results", status = "success", solidHeader = T, width = 3,
+                       textOutput("output_backtest")
+                   )
+          ),
+          tabPanel(title = "Download Stock",
+                   textInput("download_name", label = "Stock Name"),
+                   actionButton("action_download_stock", label = "Download")
           )
         )
       )
